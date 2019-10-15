@@ -48,3 +48,20 @@ function inquireUpdates() {
         }
     });
 };
+function restockRequest() {
+    inquirer.prompt([
+        {
+            name: 'ID',
+            type: 'input',
+            message: 'What is the item number of the item you wish to restock?'
+        }, {
+            name: 'Quantity',
+            type: 'input',
+            message: 'How many would you like to add?'
+        },
+    ]).then(function(answers) {
+        var quantityAdded = answers.Quantity;
+        var IDofProduct = answers.ID;
+        restockDatabase(IDofProduct, quantityAdded);
+    });
+};
