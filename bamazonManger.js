@@ -65,3 +65,58 @@ function restockRequest() {
         restockDatabase(IDofProduct, quantityAdded);
     });
 };
+function restockDatabase (id, quantity) {
+    connection.query ('SELECT * FROM prodcuts WHERE item_id = ' + id, function(error, response) {
+        if (error) throw error;
+        connection.query('UPDATE prodcuts SET stock_quantity = stock_quantity + ' quantity + ' WHERE item_id = ' + id);
+        displayAll();
+    });
+};
+function addRequest(){
+    inquirer.prompt([
+        {
+            name: 'Name',
+            type: 'input',
+            message: 'What is the name of the item you want to restock?'
+        }, {
+            name: 'Category',
+            type: 'input',
+            message: 'What is the category for this prodcut?'
+        }, {
+            name: 'Price',
+            type: 'input',
+            message: 'How much would you like to sell the item for?'
+        }, {
+            name: 'Quantity',
+            type: 'input',
+            message: 'How many would you like to add?'
+        },
+    ]).then(function(answers){
+        var name = answers.Name;
+        var category = answers.Category;
+        var price = answers.Price;
+        var quantity = answers.Quantity;
+        buildNewItem(name,category,price,quantity);
+    });
+};
+function buildNewItem(name,category,price,quantity) {
+    connection.query('INSERT INTO Products (product_name,department_name,price,stock_quantity) VALUES("' + name + '","' + category + '",' + price + ',' + quantity +  ')');
+    displayAll();
+};
+function removeRequest(){
+    inquirer.prompt([
+        {
+            name: 'ID',
+            type: 'input',
+            message: 'What is the item number of the item you wish to remove?'
+        }
+    ]).then(function(answer){
+        var id = answer.ID;
+        removeFromDatabase(id);
+    });
+};
+function removeFromDatabase(id){
+    connection.query('DELETE FROM prodcuts WHERE item_id = ' + id);
+    displayAll();
+};
+displayAll();
