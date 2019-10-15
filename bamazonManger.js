@@ -24,6 +24,27 @@ function displayAll(){
             );
         }
         console.log(displayTable.toString());
-        inquirePurchase();
+        inquireUpdates();
+    });
+};
+function inquireUpdates() {
+    inquireUpdates.prompt([
+        {
+            name: 'action',
+            type: 'list',
+            message: 'Choose an option:',
+            choices: ['Restock Inventory' , 'Add New Product', 'Remove an Existing Product']
+    }]).then(function(answers) {
+        switch (answers.action) {
+            case 'Restock Inventory':
+                restockRequest();
+                break;
+            case 'Add New Product':
+                addRequest();
+                break;
+            case 'Remove an Existing Product':
+                removeRequest();
+                break;
+        }
     });
 };
