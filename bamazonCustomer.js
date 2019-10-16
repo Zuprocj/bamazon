@@ -43,10 +43,10 @@ function inquirePurchase(){
     ]).then(function(answers){
         var quantityWanted = answers.Quantity;
         var idWanted = answers.ID;
-        purchaseFromDatabasae(idWanted, quantityWanted);
+        purchaseFromDatabase(idWanted, quantityWanted);
     });
 };
-function purchaseFromDatabasae(ID, quantityNeeded) {
+function purchaseFromDatabase(ID, quantityNeeded) {
     connection.query('SELECT * FROM products WHERE item_id = ' + ID, function(error, response) {
         if (error) throw error;
         if (quantityNeeded <= response[0].stock_quantity) {
@@ -70,7 +70,7 @@ function repeat() {
       message: "Would you like to continue shopping?"
     }).then(function (answer) {
       if (answer.shop == "Yes") {
-        inquireUpdates();
+        displayAll();
       }
       else {
         console.log('Have a great day!')
