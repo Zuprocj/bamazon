@@ -24,6 +24,27 @@ function displayAll(){
             );
         }
         console.log(displayTable.toString());
-        inquireUpdates();
+        manageRegion();
     });
 };
+function manageRegion() {
+    inquirer.prompt([
+        {
+            name: 'mainMenu',
+            type: 'list',
+            message: 'Welcome to Bamazon! What would you like to do today?',
+            choices: [
+                "View Product Sales byy Department",
+                "Create New Department"
+            ]
+        }]).then(function(response) {
+            switch(response.mainMenu) {
+                case "View Product Sales by Department":
+                viewProdcuts();
+                break;
+                case "Create New Department":
+                addDept();
+                break;
+            }
+        })
+}
