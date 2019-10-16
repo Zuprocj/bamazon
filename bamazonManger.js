@@ -6,7 +6,7 @@ var connection = mysql.createConnection({
     host: 'localhost',
     port: 3306,
     user: 'root',
-    password: '',
+    password: 'password',
     database: "productsDB"
 });
 
@@ -19,7 +19,7 @@ function displayAll(){
         });
         for (i=0; i < response.length; i++) {
             displayTable.push(
-                [response[i].item_id, response.[i].product_name, response[i].department_name,
+                [response[i].item_id, response[i].product_name, response[i].department_name,
                 response[i].price, response[i].stock_quantity]
             );
         }
@@ -28,7 +28,7 @@ function displayAll(){
     });
 };
 function inquireUpdates() {
-    inquireUpdates.prompt([
+    inquirer.prompt([
         {
             name: 'action',
             type: 'list',
@@ -65,10 +65,10 @@ function restockRequest() {
         restockDatabase(IDofProduct, quantityAdded);
     });
 };
-function restockDatabase (id, quantity) {
+function restockDatabase (id, quant) {
     connection.query ('SELECT * FROM products WHERE item_id = ' + id, function(error, response) {
         if (error) throw error;
-        connection.query('UPDATE products SET stock_quantity = stock_quantity + ' quantity + ' WHERE item_id = ' + id);
+        connection.query('UPDATE products SET stock_quantity = stock_quantity + ' + quant + ' WHERE item_id = ' + id);
         displayAll();
     });
 };

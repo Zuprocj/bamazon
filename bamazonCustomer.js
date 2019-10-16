@@ -6,7 +6,7 @@ var connection = mysql.createConnection({
     host: 'localhost',
     port: 3306,
     user: 'root',
-    password: '',
+    password: 'password',
     database: "productsDB"
 });
 
@@ -19,7 +19,7 @@ function displayAll(){
         });
         for (i=0; i < response.length; i++) {
             displayTable.push(
-                [response[i].item_id, response.[i].product_name, response[i].department_name,
+                [response[i].item_id, response[i].product_name, response[i].department_name,
                 response[i].price, response[i].stock_quantity]
             );
         }
@@ -28,7 +28,7 @@ function displayAll(){
     });
 };
 function inquirePurchase(){
-    inquirePurchase.prompt([
+    inquirer.prompt([
         {
             name: 'ID',
             type: 'input',
@@ -48,7 +48,7 @@ function purchaseFromDatabasae(ID, quantityNeeded) {
     connection.query('SELECT * FROM products WHERE item_id = ' + ID, function(error, response) {
         if (error) throw error;
         if (quantityNeeded <= response[0].stock_quantity) {
-            var totalCost = response.[0].price * quantityNeeded;
+            var totalCost = response[0].price * quantityNeeded;
             console.log('We have what you need. Order coming up!');
             console.log('Your total cost for ' + quantityNeeded + ' ' + response[0].product_name +
              ' is ' + totalCost + '. Thank you for your purchase.')
