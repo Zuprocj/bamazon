@@ -10,6 +10,36 @@ var connection = mysql.createConnection({
     database: "productsDB"
 });
 
+inquireUpdates();
+
+function inquireUpdates() {
+    inquirer.prompt([
+        {
+            name: 'action',
+            type: 'list',
+            message: 'Choose an option:',
+            choices: ['Review stock', 'Restock Inventory' , 'Add New Product', 'View Low Inventory', 'Remove an Existing Product']
+    }]).then(function(answers) {
+        switch (answers.action) {
+            case 'Review stock':
+                displayAll();
+                break;
+            case 'Restock Inventory':
+                restockRequest();
+                break;
+            case 'Add New Product':
+                addRequest();
+                break;
+            case 'View Low Inventory':
+                viewLow();
+                break;
+            case 'Remove an Existing Product':
+                removeRequest();
+                break;
+        }
+    });
+};
+
 function displayAll(){
     connection.query('SELECT * FROM products', function(error, response) {
         if (error) throw error;
@@ -25,27 +55,6 @@ function displayAll(){
         }
         console.log(displayTable.toString());
         inquireUpdates();
-    });
-};
-function inquireUpdates() {
-    inquirer.prompt([
-        {
-            name: 'action',
-            type: 'list',
-            message: 'Choose an option:',
-            choices: ['Restock Inventory' , 'Add New Product', 'Remove an Existing Product']
-    }]).then(function(answers) {
-        switch (answers.action) {
-            case 'Restock Inventory':
-                restockRequest();
-                break;
-            case 'Add New Product':
-                addRequest();
-                break;
-            case 'Remove an Existing Product':
-                removeRequest();
-                break;
-        }
     });
 };
 function restockRequest() {
@@ -65,13 +74,13 @@ function restockRequest() {
         restockDatabase(IDofProduct, quantityAdded);
     });
 };
-function restockDatabase (id, quant) {
-    connection.query ('SELECT * FROM products WHERE item_id = ' + id, function(error, response) {
-        if (error) throw error;
-        connection.query('UPDATE products SET stock_quantity = stock_quantity + ' + quant + ' WHERE item_id = ' + id);
-        displayAll();
-    });
-};
+    function restockDatabase (id, quant) {
+        connection.query ('SELECT * FROM products WHERE item_id = ' + id, function(error, response) {
+            if (error) throw error;
+            connection.query('UPDATE products SET stock_quantity = stock_quantity + ' + quant + ' WHERE item_id = ' + id);
+            inquireUpdates();
+        });
+    };
 function addRequest(){
     inquirer.prompt([
         {
@@ -99,9 +108,23 @@ function addRequest(){
         buildNewItem(name,category,price,quantity);
     });
 };
-function buildNewItem(name,category,price,quantity) {
-    connection.query('INSERT INTO Products (product_name,department_name,price,stock_quantity) VALUES("' + name + '","' + category + '",' + price + ',' + quantity +  ')');
-    displayAll();
+    function buildNewItem(name,category,price,quantity) {
+        connection.query('INSERT INTO Products (product_name,department_name,price,stock_quantity) VALUES("' + name + '","' + category + '",' + price + ',' + quantity +  ')');
+        inquireUpdates();
+};
+function viewLow() {
+    connection.query("SELECT * FROM products WHERE stock_quantity < 5", function (err, res) {
+        if (err) throw err;
+        var displayTable = new table({
+            head: ['Item ID', 'Product Name', 'Department', 'Price', 'Stock'],
+            colWidths: [10,30,18,10,14]
+        });
+        for (var i = 0; i < res.length; i++) {
+          displayTable.push([res[i].item_id, res[i].product_name, res[i].department_name, res[i].price, res[i].stock_quantity])
+        }
+        console.log(displayTable.toString());
+        inquireUpdates();
+      })
 };
 function removeRequest(){
     inquirer.prompt([
@@ -117,6 +140,5 @@ function removeRequest(){
 };
 function removeFromDatabase(id){
     connection.query('DELETE FROM products WHERE item_id = ' + id);
-    displayAll();
+    inquireUpdates();
 };
-displayAll();

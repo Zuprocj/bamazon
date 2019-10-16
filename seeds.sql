@@ -29,10 +29,3 @@ VALUES ("Storm Trooper Minifigure", "Interesting Finds", 29.98, 7, 20000);
 
 INSERT INTO products (product_name, department_name, price, stock_quantity, product_sales)
 VALUES ("Vinyl Sticker Pack", "Interesting Finds", 7.99, 200,6700);
-
-INSERT INTO departments (department_name, over_head_costs)
-VALUES ("Home Goods", 12000), 
-("Books", 4000),
-("Interesting Finds", 8000),
-("Cleaning", 9000);
-
