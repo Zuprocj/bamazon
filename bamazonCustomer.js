@@ -10,6 +10,8 @@ var connection = mysql.createConnection({
     database: "productsDB"
 });
 
+displayAll ();
+
 function displayAll(){
     connection.query('SELECT * FROM products', function(error, response) {
         if (error) throw error;
@@ -57,7 +59,22 @@ function purchaseFromDatabasae(ID, quantityNeeded) {
         } else {
             console.log("Our apologies. We don't have enough " + response[0].product_name + " to fulfill your order.");
         };
-        displayAll();
+        repeat();
     });
 }
-displayAll();
+function repeat() {
+    inquirer.prompt({
+      name: "shop",
+      type: "list",
+      choices: ["Yes", "No"],
+      message: "Would you like to continue shopping?"
+    }).then(function (answer) {
+      if (answer.shop == "Yes") {
+        inquireUpdates();
+      }
+      else {
+        console.log('Have a great day!')
+        connection.end();
+      }
+    });
+  }

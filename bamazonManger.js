@@ -54,7 +54,7 @@ function displayAll(){
             );
         }
         console.log(displayTable.toString());
-        inquireUpdates();
+        repeat();
     });
 };
 function restockRequest() {
@@ -78,7 +78,7 @@ function restockRequest() {
         connection.query ('SELECT * FROM products WHERE item_id = ' + id, function(error, response) {
             if (error) throw error;
             connection.query('UPDATE products SET stock_quantity = stock_quantity + ' + quant + ' WHERE item_id = ' + id);
-            inquireUpdates();
+            repeat();
         });
     };
 function addRequest(){
@@ -110,7 +110,7 @@ function addRequest(){
 };
     function buildNewItem(name,category,price,quantity) {
         connection.query('INSERT INTO Products (product_name,department_name,price,stock_quantity) VALUES("' + name + '","' + category + '",' + price + ',' + quantity +  ')');
-        inquireUpdates();
+        repeat();
 };
 function viewLow() {
     connection.query("SELECT * FROM products WHERE stock_quantity < 5", function (err, res) {
@@ -123,7 +123,7 @@ function viewLow() {
           displayTable.push([res[i].item_id, res[i].product_name, res[i].department_name, res[i].price, res[i].stock_quantity])
         }
         console.log(displayTable.toString());
-        inquireUpdates();
+        repeat();
       })
 };
 function removeRequest(){
@@ -140,5 +140,21 @@ function removeRequest(){
 };
 function removeFromDatabase(id){
     connection.query('DELETE FROM products WHERE item_id = ' + id);
-    inquireUpdates();
+    repeat();
 };
+function repeat() {
+    inquirer.prompt({
+      name: "manage",
+      type: "list",
+      choices: ["Yes", "No"],
+      message: "Would you like to continue managing the store?"
+    }).then(function (answer) {
+      if (answer.manage == "Yes") {
+        inquireUpdates();
+      }
+      else {
+        console.log('Have a great day!')
+        connection.end();
+      }
+    });
+  }
