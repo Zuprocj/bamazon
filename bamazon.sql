@@ -9,6 +9,7 @@ CREATE TABLE products (
     department_name VARCHAR(100) NUll,
     price DECIMAL(10,4) NOT NULL,
     stock_quantity INT NOT NULL,
+    product_sales DECIMAL (10,2) NULL,
     PRIMARY KEY (item_id)
 );
 
@@ -24,5 +25,3 @@ FROM products A, departments B
 WHERE a.department_name = b.department_name
 GROUP BY department_name
 ORDER BY department_id;
-
-SELECT * FROM products;
