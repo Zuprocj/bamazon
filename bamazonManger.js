@@ -11,7 +11,7 @@ var connection = mysql.createConnection({
 });
 
 function displayAll(){
-    connection.query('SELECT * FROM prodcuts', function(error, response) {
+    connection.query('SELECT * FROM products', function(error, response) {
         if (error) throw error;
         var displayTable = new table({
             head: ['Item ID', 'Product Name', 'Department', 'Price', 'Stock'],
@@ -19,7 +19,7 @@ function displayAll(){
         });
         for (i=0; i < response.length; i++) {
             displayTable.push(
-                [response[i].item_id, response.[i].prodcut_name, response[i].department_name,
+                [response[i].item_id, response.[i].product_name, response[i].department_name,
                 response[i].price, response[i].stock_quantity]
             );
         }
@@ -66,9 +66,9 @@ function restockRequest() {
     });
 };
 function restockDatabase (id, quantity) {
-    connection.query ('SELECT * FROM prodcuts WHERE item_id = ' + id, function(error, response) {
+    connection.query ('SELECT * FROM products WHERE item_id = ' + id, function(error, response) {
         if (error) throw error;
-        connection.query('UPDATE prodcuts SET stock_quantity = stock_quantity + ' quantity + ' WHERE item_id = ' + id);
+        connection.query('UPDATE products SET stock_quantity = stock_quantity + ' quantity + ' WHERE item_id = ' + id);
         displayAll();
     });
 };
@@ -81,7 +81,7 @@ function addRequest(){
         }, {
             name: 'Category',
             type: 'input',
-            message: 'What is the category for this prodcut?'
+            message: 'What is the category for this product?'
         }, {
             name: 'Price',
             type: 'input',
@@ -116,7 +116,7 @@ function removeRequest(){
     });
 };
 function removeFromDatabase(id){
-    connection.query('DELETE FROM prodcuts WHERE item_id = ' + id);
+    connection.query('DELETE FROM products WHERE item_id = ' + id);
     displayAll();
 };
 displayAll();
